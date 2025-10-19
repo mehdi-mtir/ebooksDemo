@@ -1,0 +1,21 @@
+<h2>Liste des livres : </h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Titre</th>
+      <th scope="col">Auteur</th>
+      <th scope="col">Prix</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (ebook of ebooks; track ebook.id) {
+    <tr>
+      <th scope="row">{{ebook.id}}</th>
+      <td>{{ebook.title}}</td>
+      <td>{{ebook.author}}</td>
+      <td>{{ebook.price}}</td>
+    </tr>
+    }
+  </tbody>
+</table>
