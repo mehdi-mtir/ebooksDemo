@@ -14,6 +14,12 @@ export class EbookService {
     return [...this.ebooks];
   }
 
-  //addEbook...
+  getLastId() : number{
+    return this.ebooks[this.ebooks.length - 1].id
+  }
+
+  addEbook(ebook : IEbook){
+    this.ebooks = [...this.ebooks, ebook]
+  }
 
 }
