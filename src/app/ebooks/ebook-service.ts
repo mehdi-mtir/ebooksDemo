@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { enableProfiling, Injectable } from '@angular/core';
 import { IEbook } from './iebook';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +11,14 @@ export class EbookService {
     {id : 2, title : "The slight edge", author : "Jeff Olsen", price : 25}
   ];
 
+  ebooksChanged = new Subject<IEbook[]>();
+
   getEbooks() : IEbook[]{
     return [...this.ebooks];
+  }
+
+  getEbookById(id : number) : IEbook | undefined{
+    return this.ebooks.find(ebook => ebook.id === id);
   }
 
   getLastId() : number{
@@ -20,6 +27,22 @@ export class EbookService {
 
   addEbook(ebook : IEbook){
     this.ebooks = [...this.ebooks, ebook]
+  }
+
+  editEbook(ebook : IEbook):void{
+    this.ebooks = this.ebooks.map(
+      e => e.id === ebook.id?ebook:e
+    )
+  }
+
+  deleteEbook(id : number){
+    if(confirm("Etes-vous sûre de vouloir supprimer le livre?")){
+      this.ebooks = this.ebooks.filter(
+        ebook => ebook.id !== id
+      )
+      console.log(this.ebooks);
+      this.ebooksChanged.next([...this.ebooks]);
+    }
   }
 
 }
