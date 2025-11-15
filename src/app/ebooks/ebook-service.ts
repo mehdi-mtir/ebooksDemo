@@ -11,9 +11,24 @@ export class EbookService {
     {id : 2, title : "The slight edge", author : "Jeff Olsen", price : 25}
   ];
 
+  saveData(){
+    window.localStorage.setItem("ebooks", JSON.stringify(this.ebooks))
+  }
+
+  getData(){
+    const data = window.localStorage.getItem("ebooks");
+    if( data != null){
+      this.ebooks = JSON.parse(data);
+    }
+    else{
+      this.ebooks = [];
+    }
+  }
+
   ebooksChanged = new Subject<IEbook[]>();
 
   getEbooks() : IEbook[]{
+    this.getData();
     return [...this.ebooks];
   }
 
@@ -22,17 +37,21 @@ export class EbookService {
   }
 
   getLastId() : number{
-    return this.ebooks[this.ebooks.length - 1].id
+    if(this.ebooks.length>0)
+      return this.ebooks[this.ebooks.length - 1].id;
+    return 0;
   }
 
   addEbook(ebook : IEbook){
-    this.ebooks = [...this.ebooks, ebook]
+    this.ebooks = [...this.ebooks, ebook];
+    this.saveData()
   }
 
   editEbook(ebook : IEbook):void{
     this.ebooks = this.ebooks.map(
       e => e.id === ebook.id?ebook:e
     )
+    this.saveData();
   }
 
   deleteEbook(id : number){
@@ -40,9 +59,10 @@ export class EbookService {
       this.ebooks = this.ebooks.filter(
         ebook => ebook.id !== id
       )
-      console.log(this.ebooks);
+      this.saveData();
       this.ebooksChanged.next([...this.ebooks]);
     }
+
   }
 
 }
